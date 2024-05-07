@@ -9,12 +9,15 @@
 
 #define IS_O_LIKE_CHAR(c) ((c) == '0' || (c) == 'o' || (c) == 'O')
 
-
+#define GAME_INTERRUPTED "?-?"
+#define BLACK_WINNED     "0-1"
+#define WHITE_WINNED     "1-0"
+#define EQUALITY         "1/2-1/2"
 
 int main()
 {
     bool black_turn = false;
-    char winner[8] = "?-?";
+    const char* winner = GAME_INTERRUPTED;
     Board board = Board();
 
     board.display();
@@ -32,18 +35,16 @@ int main()
             {
                 if(black_turn)
                 {
-                    winner[0] = '1';
-                    winner[2] = '0';
+                    winner = WHITE_WINNED;
                 }
                 else
                 {
-                    winner[0] = '0';
-                    winner[2] = '1';
+                    winner = BLACK_WINNED;
                 }
                 std::cout << "checkmate !" << std::endl;
                 break;
             }
-            std::strcpy(winner, "1/2-1/2");
+            winner = EQUALITY;
             std::cout << "Stalemate !" << std::endl;
             break;
         }
@@ -70,13 +71,11 @@ int main()
         {
             if(black_turn)
             {
-                winner[0] = '1';
-                winner[2] = '0';
+                winner = WHITE_WINNED;
             }
             else
             {
-                winner[0] = '0';
-                winner[2] = '1';
+                winner = WHITE_WINNED;
             }
             break;
         }
@@ -88,7 +87,7 @@ int main()
         
         if(std::strcmp(command, "/draw") == 0)
         {
-            std::strcpy(winner, "1/2-1/2");
+            winner = EQUALITY;
             break;
         }
 
