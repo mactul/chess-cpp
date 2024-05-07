@@ -146,10 +146,6 @@ const char* Pawn::whoami(void) const
     return "wP";
 }
 
-MovementMap Pawn::list_maybe_possible_movements() const
-{
-    return (MovementMap)(-1);  // all possible movements
-}
 
 Piece* Pawn::copy(Board* board) const
 {

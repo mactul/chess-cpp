@@ -13,7 +13,6 @@ public:
 
     const char* whoami(void) const override;
 
-    MovementMap list_maybe_possible_movements() const override;
 
     Piece* copy(Board* board) const override;
 };

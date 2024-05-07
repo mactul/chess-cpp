@@ -222,17 +222,14 @@ bool Board::is_king_in_chess(bool black) const
 
 static bool piece_can_move(Piece* piece)
 {
-    MovementMap movements = piece->list_maybe_possible_movements();
-
-    for(int row = BOARD_SIZE-1; row >= 0; row--)
+    for(int row = 0; row < BOARD_SIZE; row++)
     {
-        for(int col = BOARD_SIZE-1; col >= 0; col--)
+        for(int col = 0; col < BOARD_SIZE; col++)
         {
-            if((movements & 1) && piece->move(row, col, true))
+            if(piece->move(row, col, true))
             {
                 return true;
             }
-            movements = movements >> 1;
         }
     }
     return false;

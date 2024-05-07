@@ -4,8 +4,6 @@
 #include "board.hpp"
 
 
-typedef uint64_t MovementMap;
-
 class Board;
 
 class Piece {
@@ -34,14 +32,6 @@ public:
     virtual bool move(uint8_t row, uint8_t col, bool fake = false) = 0;
     virtual const char* display(void) const = 0;
     virtual const char* whoami(void) const = 0;
-
-    /**
-     * @brief This function is here to accelerate checkmate/stalemate calculs by filtering the positions where a piece can go.  
-     * @brief If this function always returns `(MovementMap)(-1)` then all positions will be tested and their is no acceleration at all but the program will work.
-     * 
-     * @return MovementMap - a 8x8 bit field
-     */
-    virtual MovementMap list_maybe_possible_movements() const = 0;
 
     virtual Piece* copy(Board* board) const = 0;
 };

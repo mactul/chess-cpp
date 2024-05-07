@@ -44,10 +44,6 @@ const char* King::whoami(void) const
     return "wK";
 }
 
-MovementMap King::list_maybe_possible_movements() const
-{
-    return (MovementMap)(-1);  // all possible movements
-}
 
 Piece* King::copy(Board* board) const
 {

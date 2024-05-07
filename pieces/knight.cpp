@@ -40,10 +40,6 @@ const char* Knight::whoami(void) const
     return "wN";
 }
 
-MovementMap Knight::list_maybe_possible_movements() const
-{
-    return (MovementMap)(-1);  // all possible movements
-}
 
 Piece* Knight::copy(Board* board) const
 {

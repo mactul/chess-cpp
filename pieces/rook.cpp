@@ -32,10 +32,6 @@ const char* Rook::whoami(void) const
     return "wR";
 }
 
-MovementMap Rook::list_maybe_possible_movements() const
-{
-    return (MovementMap)(-1);  // all possible movements
-}
 
 Piece* Rook::copy(Board* board) const
 {

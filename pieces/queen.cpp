@@ -32,12 +32,6 @@ const char* Queen::whoami(void) const
     return "wQ";
 }
 
-
-MovementMap Queen::list_maybe_possible_movements() const
-{
-    return (MovementMap)(-1);  // all possible movements
-}
-
 Piece* Queen::copy(Board* board) const
 {
     return new Queen(board, this->row, this->col, this->black);
