@@ -37,8 +37,6 @@ public:
 
     bool is_king_in_chess(bool black) const;
 
-    bool is_king_mat(bool black) const;
-
     bool no_movements_allowed(bool black);
 
     bool is_en_passant(uint8_t row, uint8_t col, bool black);

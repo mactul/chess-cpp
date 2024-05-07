@@ -15,11 +15,7 @@ bool Knight::move(uint8_t row, uint8_t col, bool fake)
         return false;
     }
 
-    if(fake)
-    {
-        return this->fake_unrestricted_move(row, col);
-    }
-    return this->unrestricted_move(row, col);
+    return this->move_no_geometry(row, col, fake);
 }
 
 const char* Knight::display(void) const
@@ -44,45 +40,9 @@ const char* Knight::whoami(void) const
     return "wN";
 }
 
-bool Knight::has_possible_movements(void) const
+MovementMap Knight::list_maybe_possible_movements() const
 {
-    if(this->fake_unrestricted_move(this->row + 2, this->col + 3))
-    {
-        return true;
-    }
-    if(this->fake_unrestricted_move(this->row + 3, this->col + 2))
-    {
-        return true;
-    }
-
-    if(this->fake_unrestricted_move(this->row + 2, this->col - 3))
-    {
-        return true;
-    }
-    if(this->fake_unrestricted_move(this->row - 3, this->col + 2))
-    {
-        return true;
-    }
-
-    if(this->fake_unrestricted_move(this->row - 2, this->col + 3))
-    {
-        return true;
-    }
-    if(this->fake_unrestricted_move(this->row + 3, this->col - 2))
-    {
-        return true;
-    }
-
-    if(this->fake_unrestricted_move(this->row - 2, this->col - 3))
-    {
-        return true;
-    }
-    if(this->fake_unrestricted_move(this->row - 3, this->col - 2))
-    {
-        return true;
-    }
-
-    return false;
+    return (MovementMap)(-1);  // all possible movements
 }
 
 Piece* Knight::copy(Board* board) const

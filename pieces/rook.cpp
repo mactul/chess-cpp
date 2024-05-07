@@ -7,7 +7,7 @@ Rook::Rook(Board* board, uint8_t row, uint8_t col, bool black): Piece(board, row
 
 bool Rook::move(uint8_t row, uint8_t col, bool fake)
 {
-    return this->rook_restriction(row, col) && ((fake && this->fake_unrestricted_move(row, col)) || this->unrestricted_move(row, col));
+    return this->rook_restriction(row, col) && this->move_no_geometry(row, col, fake);
 }
 
 const char* Rook::display(void) const
@@ -32,26 +32,9 @@ const char* Rook::whoami(void) const
     return "wR";
 }
 
-bool Rook::has_possible_movements(void) const
+MovementMap Rook::list_maybe_possible_movements() const
 {
-    if(this->fake_unrestricted_move(this->row, this->col - 1))
-    {
-        return true;
-    }
-    if(this->fake_unrestricted_move(this->row, this->col + 1))
-    {
-        return true;
-    }
-    if(this->fake_unrestricted_move(this->row - 1, this->col))
-    {
-        return true;
-    }
-    if(this->fake_unrestricted_move(this->row + 1, this->col))
-    {
-        return true;
-    }
-
-    return false;
+    return (MovementMap)(-1);  // all possible movements
 }
 
 Piece* Rook::copy(Board* board) const

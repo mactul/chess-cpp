@@ -14,6 +14,41 @@ bool Piece::is_black() const
     return this->black;
 }
 
+bool Piece::move_no_geometry(uint8_t row, uint8_t col, bool fake)
+{
+    Board board_copy = Board(*(this->board));
+    Piece* piece_copy = board_copy.get_piece(this->row, this->col);
+
+
+    // if it's a fake move and it kills the adverse king, we have to return true, even if our king is endanger.
+    Piece* piece_to_kill = board_copy.get_piece(row, col);
+    if(fake && piece_to_kill != nullptr && piece_to_kill->whoami()[1] == 'K' && piece_to_kill->is_black() != this->black)
+    {
+        return true;
+    }
+
+
+    if(!piece_copy->unrestricted_move(row, col))
+    {
+        // illegal move
+        return false;
+    }
+
+
+    if(board_copy.is_king_in_chess(this->black))
+    {
+        // king in chess: illegal move
+        return false;
+    }
+
+    if(fake)
+    {
+        return true;
+    }
+
+    return this->unrestricted_move(row, col);
+}
+
 
 bool Piece::unrestricted_move(uint8_t row, uint8_t col)
 {
@@ -38,19 +73,6 @@ bool Piece::unrestricted_move(uint8_t row, uint8_t col)
     return true;
 }
 
-bool Piece::fake_unrestricted_move(uint8_t row, uint8_t col) const
-{
-    Piece* piece;
-
-    if(row >= BOARD_SIZE || col >= BOARD_SIZE)
-    {
-        return false;
-    }
-    
-    piece = this->board->get_piece(row, col);
-
-    return piece == nullptr || piece->is_black() != this->black;
-}
 
 bool Piece::rook_restriction(uint8_t row, uint8_t col) const
 {

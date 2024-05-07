@@ -7,7 +7,7 @@ Bishop::Bishop(Board* board, uint8_t row, uint8_t col, bool black): Piece(board,
 
 bool Bishop::move(uint8_t row, uint8_t col, bool fake)
 {
-    return this->bishop_restriction(row, col) && ((fake && this->fake_unrestricted_move(row, col)) || this->unrestricted_move(row, col));
+    return this->bishop_restriction(row, col) && this->move_no_geometry(row, col, fake);
 }
 
 const char* Bishop::display(void) const
@@ -32,27 +32,10 @@ const char* Bishop::whoami(void) const
     return "wB";
 }
 
-bool Bishop::has_possible_movements(void) const
+
+MovementMap Bishop::list_maybe_possible_movements() const
 {
-
-    if(this->fake_unrestricted_move(this->row - 1, this->col - 1))
-    {
-        return true;
-    }
-    if(this->fake_unrestricted_move(this->row + 1, this->col - 1))
-    {
-        return true;
-    }
-    if(this->fake_unrestricted_move(this->row - 1, this->col + 1))
-    {
-        return true;
-    }
-    if(this->fake_unrestricted_move(this->row + 1, this->col + 1))
-    {
-        return true;
-    }
-
-    return false;
+    return (MovementMap)(-1);  // all possible movements
 }
 
 

@@ -53,7 +53,8 @@ bool Pawn::move(uint8_t row, uint8_t col, bool fake)
         {
             if(this->board->is_en_passant(row, col, !this->black))
             {
-                this->board->set_piece(row + (!this->black ? 1: -1), col, nullptr);
+                if(!fake)
+                    this->board->set_piece(row + (!this->black ? 1: -1), col, nullptr);
             }
             else
             {
@@ -68,7 +69,9 @@ bool Pawn::move(uint8_t row, uint8_t col, bool fake)
 
     if(fake)
     {
-        return this->fake_unrestricted_move(row, col);
+        // Even if their is a promotion, this will not change either the king is in danger or not.
+        // We keep the promotion only for real movements.
+        return this->move_no_geometry(row, col, true);
     }
 
     if(this->row == row+2 || this->row+2 == row)
@@ -76,49 +79,49 @@ bool Pawn::move(uint8_t row, uint8_t col, bool fake)
         two_squares_move = true;
     }
 
-    if(this->unrestricted_move(row, col))
+    if(!this->move_no_geometry(row, col))
     {
-        if(!this->no_promotion && ((this->black && row == BOARD_SIZE-1) || (!this->black && row == 0)))
-        {
-            // promotion
-            char answer[20];
-            char piece_type = 0;
-            std::cout << "Promotion ! ";
-            while(piece_type != 'Q' && piece_type != 'R' && piece_type != 'B' && piece_type != 'N')
-            {
-                std::cout << "To which piece do you want to promote your pawn ? (Q, R, B, N): " << std::flush;
-                fgets(answer, 20, stdin);
-                piece_type = answer[0];
-            }
-
-            Piece* piece;
-            switch(piece_type)
-            {
-                case 'Q':
-                    piece = new Queen(this->board, this->row, this->col, this->black);
-                    break;
-                case 'R':
-                    piece = new Rook(this->board, this->row, this->col, this->black);
-                    break;
-                case 'B':
-                    piece = new Bishop(this->board, this->row, this->col, this->black);
-                    break;
-                case 'N':
-                    piece = new Knight(this->board, this->row, this->col, this->black);
-                    break;
-                default:
-                    std::cerr << "Fatal error, the impossible happened" << std::endl;
-                    std::exit(1);
-            }
-            this->board->set_piece(this->row, this->col, piece);
-        }
-        if(two_squares_move)
-        {
-            this->board->set_en_passant(this->row + (this->black ? -1: 1), this->col, this->black);
-        }
-        return true;
+        return false;
     }
-    return false;
+    if(!this->no_promotion && ((this->black && row == BOARD_SIZE-1) || (!this->black && row == 0)))
+    {
+        // promotion
+        char answer[20];
+        char piece_type = 0;
+        std::cout << "Promotion ! ";
+        while(piece_type != 'Q' && piece_type != 'R' && piece_type != 'B' && piece_type != 'N')
+        {
+            std::cout << "To which piece do you want to promote your pawn ? (Q, R, B, N): " << std::flush;
+            fgets(answer, 20, stdin);
+            piece_type = answer[0];
+        }
+
+        Piece* piece;
+        switch(piece_type)
+        {
+            case 'Q':
+                piece = new Queen(this->board, this->row, this->col, this->black);
+                break;
+            case 'R':
+                piece = new Rook(this->board, this->row, this->col, this->black);
+                break;
+            case 'B':
+                piece = new Bishop(this->board, this->row, this->col, this->black);
+                break;
+            case 'N':
+                piece = new Knight(this->board, this->row, this->col, this->black);
+                break;
+            default:
+                std::cerr << "Fatal error, the impossible happened" << std::endl;
+                std::exit(1);
+        }
+        this->board->set_piece(this->row, this->col, piece);
+    }
+    if(two_squares_move)
+    {
+        this->board->set_en_passant(this->row + (this->black ? -1: 1), this->col, this->black);
+    }
+    return true;
 }
 
 const char* Pawn::display(void) const
@@ -143,22 +146,9 @@ const char* Pawn::whoami(void) const
     return "wP";
 }
 
-bool Pawn::has_possible_movements(void) const
+MovementMap Pawn::list_maybe_possible_movements() const
 {
-    if(this->fake_unrestricted_move(this->row + (this->black ? 1: -1), this->col))
-    {
-        return true;
-    }
-    if(this->fake_unrestricted_move(this->row + (this->black ? 1: -1), this->col + 1))
-    {
-        return true;
-    }
-    if(this->fake_unrestricted_move(this->row + (this->black ? 1: -1), this->col - 1))
-    {
-        return true;
-    }
-
-    return false;
+    return (MovementMap)(-1);  // all possible movements
 }
 
 Piece* Pawn::copy(Board* board) const

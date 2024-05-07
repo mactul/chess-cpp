@@ -219,31 +219,23 @@ bool Board::is_king_in_chess(bool black) const
     return is_piece_controlled(black ? this->black_king_row: this->white_king_row, black ? this->black_king_col: this->white_king_col, black);
 }
 
-bool Board::is_king_mat(bool black) const
+
+static bool piece_can_move(Piece* piece)
 {
-    uint8_t king_row = black ? this->black_king_row: this->white_king_row;
-    uint8_t king_col = black ? this->black_king_col: this->white_king_col;
-    Board board_copy = Board(*this);
-    Piece* king = board_copy.get_piece(king_row, king_col);
+    MovementMap movements = piece->list_maybe_possible_movements();
 
-    for(int row_off = -1; row_off <= 1; row_off++)
+    for(int row = BOARD_SIZE-1; row >= 0; row--)
     {
-        for(int col_off = -1; col_off <= 1; col_off++)
+        for(int col = BOARD_SIZE-1; col >= 0; col--)
         {
-            if(!king->move(king_row + row_off, king_col + col_off))
+            if((movements & 1) && piece->move(row, col, true))
             {
-                continue;
+                return true;
             }
-
-            if(!board_copy.is_king_in_chess(black))
-            {
-                return false;
-            }
-
-            king->move(king_row, king_col);
+            movements = movements >> 1;
         }
     }
-    return true;
+    return false;
 }
 
 bool Board::no_movements_allowed(bool black)
@@ -252,7 +244,7 @@ bool Board::no_movements_allowed(bool black)
     {
         for(int col = 0; col < BOARD_SIZE; col++)
         {
-            if(this->_board[row][col] != nullptr && this->_board[row][col]->is_black() == black && this->_board[row][col]->has_possible_movements())
+            if(this->_board[row][col] != nullptr && this->_board[row][col]->is_black() == black && piece_can_move(this->_board[row][col]))
             {
                 return false;
             }

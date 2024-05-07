@@ -18,11 +18,8 @@ bool King::move(uint8_t row, uint8_t col, bool fake)
     {
         return false;
     }
-    if(fake)
-    {
-        return this->fake_unrestricted_move(row, col);
-    }
-    return this->unrestricted_move(row, col);
+    
+    return this->move_no_geometry(row, col, fake);
 }
 
 const char* King::display(void) const
@@ -47,19 +44,9 @@ const char* King::whoami(void) const
     return "wK";
 }
 
-bool King::has_possible_movements(void) const
+MovementMap King::list_maybe_possible_movements() const
 {
-    for(int row_off = -1; row_off <= 1; row_off++)
-    {
-        for(int col_off = -1; col_off <= 1; col_off++)
-        {
-            if(this->fake_unrestricted_move(this->row + row_off, this->col + col_off))
-            {
-                return true;
-            }
-        }
-    }
-    return false;
+    return (MovementMap)(-1);  // all possible movements
 }
 
 Piece* King::copy(Board* board) const

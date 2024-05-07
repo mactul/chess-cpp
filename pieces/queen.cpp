@@ -7,7 +7,7 @@ Queen::Queen(Board* board, uint8_t row, uint8_t col, bool black): Piece(board, r
 
 bool Queen::move(uint8_t row, uint8_t col, bool fake)
 {
-    return (this->rook_restriction(row, col) || this->bishop_restriction(row, col)) && ((fake && this->fake_unrestricted_move(row, col)) || this->unrestricted_move(row, col));
+    return (this->rook_restriction(row, col) || this->bishop_restriction(row, col)) && this->move_no_geometry(row, col, fake);
 }
 
 const char* Queen::display(void) const
@@ -32,19 +32,10 @@ const char* Queen::whoami(void) const
     return "wQ";
 }
 
-bool Queen::has_possible_movements(void) const
+
+MovementMap Queen::list_maybe_possible_movements() const
 {
-    for(int row_off = -1; row_off <= 1; row_off++)
-    {
-        for(int col_off = -1; col_off <= 1; col_off++)
-        {
-            if(this->fake_unrestricted_move(this->row + row_off, this->col + col_off))
-            {
-                return true;
-            }
-        }
-    }
-    return false;
+    return (MovementMap)(-1);  // all possible movements
 }
 
 Piece* Queen::copy(Board* board) const
