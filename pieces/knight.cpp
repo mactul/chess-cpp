@@ -1,0 +1,91 @@
+#include "pieces/knight.hpp"
+#include "macros.h"
+
+Knight::Knight(Board* board, uint8_t row, uint8_t col, bool black): Piece(board, row, col, black)
+{
+}
+
+bool Knight::move(uint8_t row, uint8_t col, bool fake)
+{
+    int16_t row_off = ABS((int16_t)this->row - (int16_t)row);
+    int16_t col_off = ABS((int16_t)this->col - (int16_t)col);
+
+    if((row_off != 1 || col_off != 2) && (row_off != 2 || col_off != 1))
+    {
+        return false;
+    }
+
+    if(fake)
+    {
+        return this->fake_unrestricted_move(row, col);
+    }
+    return this->unrestricted_move(row, col);
+}
+
+const char* Knight::display(void) const
+{
+    #ifdef ONLY_ASCII
+        return "N";
+    #else
+        if(this->black)
+        {
+            return UNICODE_BLACK_KNIGHT;
+        }
+        return UNICODE_WHITE_KNIGHT;
+    #endif
+}
+
+const char* Knight::whoami(void) const
+{
+    if(this->black)
+    {
+        return "bN";
+    }
+    return "wN";
+}
+
+bool Knight::has_possible_movements(void) const
+{
+    if(this->fake_unrestricted_move(this->row + 2, this->col + 3))
+    {
+        return true;
+    }
+    if(this->fake_unrestricted_move(this->row + 3, this->col + 2))
+    {
+        return true;
+    }
+
+    if(this->fake_unrestricted_move(this->row + 2, this->col - 3))
+    {
+        return true;
+    }
+    if(this->fake_unrestricted_move(this->row - 3, this->col + 2))
+    {
+        return true;
+    }
+
+    if(this->fake_unrestricted_move(this->row - 2, this->col + 3))
+    {
+        return true;
+    }
+    if(this->fake_unrestricted_move(this->row + 3, this->col - 2))
+    {
+        return true;
+    }
+
+    if(this->fake_unrestricted_move(this->row - 2, this->col - 3))
+    {
+        return true;
+    }
+    if(this->fake_unrestricted_move(this->row - 3, this->col - 2))
+    {
+        return true;
+    }
+
+    return false;
+}
+
+Piece* Knight::copy(Board* board) const
+{
+    return new Knight(board, this->row, this->col, this->black);
+}
