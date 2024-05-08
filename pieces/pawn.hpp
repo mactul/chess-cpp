@@ -5,7 +5,8 @@
 
 class Pawn: public Piece {
 private:
-    bool no_promotion;
+    bool no_promotion;  // This boolean disable the promotion if set to true.
+                        // Especially, it's disabled for copied pieces because we don't want a copied piece to ask for a promotion and a promotion doesn't affect whether the king of the promoted color is endanger or not.
 public:
     Pawn(Board* board, uint8_t row, uint8_t col, bool black, bool no_promotion = false);
 
