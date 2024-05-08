@@ -78,8 +78,9 @@ bool Board::set_piece(uint8_t row, uint8_t col, Piece* piece)
     }
     if(piece != nullptr)
     {
-        delete _board[row][col];  // We only delete the piece if it was taken by another
+        delete _board[row][col];  // We only delete the piece if it was taken by another.
 
+        // If we move a king we register his new position to always know where is the king of each color.
         const char* name = piece->whoami();
         if(name[1] == 'K')
         {
@@ -133,7 +134,7 @@ bool Board::display_square(uint8_t row, uint8_t col) const
     }
     else
     {
-        // black background
+        // green background
         if(this->_board[row][col] == nullptr)
         {
             print_in_color(" ", COLOR_BLACK_ON_GREEN);
@@ -169,10 +170,14 @@ void Board::display(void) const
     for(int row = 0; row < BOARD_SIZE; row++)
     {
         std::cout << row_index_to_notation(row) << " ";
+
+        // here is the actual display of the board, the rest are just the numbers and letters around the board.
         for(int col = 0; col < BOARD_SIZE; col++)
         {
             this->display_square(row, col);
         }
+
+
         std::cout << " " << row_index_to_notation(row) << "\n";
     }
     std::cout << "  ";
@@ -180,7 +185,7 @@ void Board::display(void) const
     {
         std::cout << " " << col_index_to_notation(col) << " ";
     }
-    std::cout << std::endl;
+    std::cout << std::endl;  // all the drawing is only flushed her by the std::endl.
 }
 
 void Board::display_csv(const char* winner) const
@@ -205,7 +210,7 @@ bool Board::is_piece_controlled(uint8_t piece_row, uint8_t piece_col, bool piece
     {
         for(int col = 0; col < BOARD_SIZE; col++)
         {
-            if(this->_board[row][col] != nullptr && (piece_black ^ this->_board[row][col]->is_black()) && this->_board[row][col]->move(piece_row, piece_col, true))
+            if(this->_board[row][col] != nullptr && (piece_black != this->_board[row][col]->is_black()) && this->_board[row][col]->move(piece_row, piece_col, true))
             {
                 return true;
             }
@@ -220,13 +225,14 @@ bool Board::is_king_in_chess(bool black) const
 }
 
 
-static bool piece_can_move(Piece* piece)
+static bool piece_can_move(const Piece* piece)
 {
     for(int row = 0; row < BOARD_SIZE; row++)
     {
         for(int col = 0; col < BOARD_SIZE; col++)
         {
-            if(piece->move(row, col, true))
+            // Even if it's ugly, here we cast piece from a (const Piece*) to a (Piece*) because since fake is true, the move is in fact a const method.
+            if(((Piece*)piece)->move(row, col, true))
             {
                 return true;
             }
@@ -235,7 +241,7 @@ static bool piece_can_move(Piece* piece)
     return false;
 }
 
-bool Board::no_movements_allowed(bool black)
+bool Board::no_movements_allowed(bool black) const
 {
     for(int row = 0; row < BOARD_SIZE; row++)
     {
@@ -313,6 +319,7 @@ bool Board::kingside_castling(bool black)
         }
     }
 
+    // the return values are discared because here the move can't fail.
     (void)piece_king->unrestricted_move(king_row, BOARD_SIZE-2);
     (void)piece_rook->unrestricted_move(king_row, BOARD_SIZE-3);
 
@@ -354,6 +361,7 @@ bool Board::queenside_castling(bool black)
         }
     }
 
+    // the return values are discared because here the move can't fail.
     (void)piece_king->unrestricted_move(king_row, 2);
     (void)piece_rook->unrestricted_move(king_row, 3);
 

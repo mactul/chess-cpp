@@ -14,6 +14,39 @@
 #define WHITE_WINNED     "1-0"
 #define EQUALITY         "1/2-1/2"
 
+
+static inline void set_winner_string(bool black_turn, const char** winner)
+{
+    if(black_turn)
+    {
+        *winner = WHITE_WINNED;
+    }
+    else
+    {
+        *winner = BLACK_WINNED;
+    }
+}
+
+
+static bool player_mate(const Board& board, bool black_turn, const char** winner)
+{
+    if(board.no_movements_allowed(black_turn))
+    {
+        if(board.is_king_in_chess(black_turn))
+        {
+            set_winner_string(black_turn, winner);
+
+            std::cout << "checkmate !" << std::endl;
+            return true;
+        }
+        *winner = EQUALITY;
+        std::cout << "Stalemate !" << std::endl;
+        return true;
+    }
+
+    return false;
+}
+
 int main()
 {
     bool black_turn = false;
@@ -22,32 +55,12 @@ int main()
 
     board.display();
 
-    while(1)
+    while(!player_mate(board, black_turn, &winner))
     {
         Piece* piece = nullptr;
         char command[MAX_COMMAND_SIZE];
         int8_t start_row, end_row, start_col, end_col;
         
-
-        if(board.no_movements_allowed(black_turn))
-        {
-            if(board.is_king_in_chess(black_turn))
-            {
-                if(black_turn)
-                {
-                    winner = WHITE_WINNED;
-                }
-                else
-                {
-                    winner = BLACK_WINNED;
-                }
-                std::cout << "checkmate !" << std::endl;
-                break;
-            }
-            winner = EQUALITY;
-            std::cout << "Stalemate !" << std::endl;
-            break;
-        }
 
         if(board.is_king_in_chess(black_turn))
         {
@@ -64,19 +77,10 @@ int main()
             break;
         }
 
-        printf("command: %s\n", command);
-
         command[7] = '\0';
         if(std::strcmp(command, "/resign") == 0)
         {
-            if(black_turn)
-            {
-                winner = WHITE_WINNED;
-            }
-            else
-            {
-                winner = WHITE_WINNED;
-            }
+            set_winner_string(black_turn, &winner);
             break;
         }
         command[5] = '\0';

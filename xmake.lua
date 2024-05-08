@@ -2,7 +2,6 @@ add_rules("mode.debug", "mode.release")
 
 set_policy("build.warning", true)
 set_warnings("all", "extra")
-set_config("mode", "debug")
 
 option("only_ascii")
     set_default("autoconfig")

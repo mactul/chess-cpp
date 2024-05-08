@@ -32,6 +32,18 @@ If you are using a cross-platform compiler like MinGW on Windows, you can config
 xmake f -p mingw
 ```
 
+You can even compile in debug mode using:
+```sh
+xmake f -m debug
+```
+
+Obviously, you can combine multiple modes but each `xmake f` reset all the unspecified parameters to their default.  
+So compiling with mingw in debug mode is like that:
+```sh
+xmake f -p mingw -m debug
+```
+
+
 ## Structure of the project
 
 ### Main.cpp

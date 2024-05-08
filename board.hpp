@@ -29,6 +29,10 @@ private:
 public:
     Board();
     ~Board();
+
+    /**
+     * @brief Make a deep copy of the board `copy`
+     */
     Board(const Board& copy);
 
     /**
@@ -39,7 +43,7 @@ public:
 
     /**
      * @brief Set the piece pointer at position `row` `col`  
-     * @brief If another piece is at this place, it's overwrite.
+     * @brief If another piece is at this place, the precedent piece is delete from memory and the pointer is overwrite by the new one.
      * 
      * @param row
      * @param col 
@@ -74,7 +78,7 @@ public:
      * 
      * @param black true to get information about the black player, false for the white player.
      */
-    bool no_movements_allowed(bool black);
+    bool no_movements_allowed(bool black) const;
 
     /**
      * @brief This method is used by pieces/pawn.cpp to know if a pawn has moved from row-1,col -> row+1,col just before.  

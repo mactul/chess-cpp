@@ -1,3 +1,4 @@
+#include <iostream>
 #include "piece.hpp"
 #include "macros.h"
 
@@ -18,6 +19,11 @@ bool Piece::move_no_geometry(uint8_t row, uint8_t col, bool fake)
 {
     Board board_copy = Board(*(this->board));
     Piece* piece_copy = board_copy.get_piece(this->row, this->col);
+    if(piece_copy == nullptr)
+    {
+        std::cerr << "Fatal error, the impossible happened" << std::endl;
+        std::exit(1);
+    }
 
 
     // if it's a fake move and it kills the adverse king, we have to return true, even if our king is endanger.
@@ -62,11 +68,14 @@ bool Piece::unrestricted_move(uint8_t row, uint8_t col)
     {
         return false;
     }
+
+    // return values are discared because here we know the data and methods can't fail.
+
     (void)this->board->set_piece(this->row, this->col, nullptr);
     this->row = row;
     this->col = col;
 
-    this->board->set_en_passant(-1, -1, this->black);
+    (void)this->board->set_en_passant(-1, -1, this->black);
 
     this->_has_moved = true;
 
@@ -78,6 +87,7 @@ bool Piece::rook_restriction(uint8_t row, uint8_t col) const
 {
     if(this->row == row && this->col == col)
     {
+        // a rook can't move to the same position
         return false;
     }
     if(this->row != row && this->col != col)
@@ -116,6 +126,7 @@ bool Piece::bishop_restriction(uint8_t row, uint8_t col) const
 
     if(this->row == row)
     {
+        // a bishop has to move at least by 1 in row.
         return false;
     }
 
