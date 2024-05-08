@@ -66,6 +66,10 @@ public:
     virtual ~Piece();
     bool is_black() const;
 
+    /**
+     * @brief Returns whether or not the piece has moved since the initial configuration.  
+     * @brief This is used for example to only allow the castling a single time.
+     */
     bool has_moved(void) const;
 
     /**
@@ -78,9 +82,34 @@ public:
      */
     bool unrestricted_move(uint8_t row, uint8_t col);  // this unfortunately has to be public because it's used by the Board class for castling.
 
+    /**
+     * @brief Move the piece only if the movement is entirely legal.
+     * 
+     * @param row the destination row of the move
+     * @param col the destination col of the move
+     * @param fake if true, then the function act like a const method and only returns whether or not the move is legal.
+     * @return `true` if the move is legal  
+     * @return `false` if the move is illegal
+     */
     virtual bool move(uint8_t row, uint8_t col, bool fake = false) = 0;
+
+    /**
+     * @brief Returns a string that is the unicode character representing the piece.
+     */
     virtual const char* display(void) const = 0;
+
+    /**
+     * @brief Returns 2 letters,  
+     * @brief the first one is either 'w' or 'b' and indicate a white/black piece,  
+     * @brief the second one is 'K', 'Q' 'R', 'B', 'N' or 'P' and indicate the type of the piece.
+     */
     virtual const char* whoami(void) const = 0;
 
+    /**
+     * @brief Generate a complete copy in memory of the piece for the board `board`.
+     * 
+     * @param board The board pointer to which the new piece needs to be attached.
+     * @return a pointer to a new allocated piece.
+     */
     virtual Piece* copy(Board* board) const = 0;
 };

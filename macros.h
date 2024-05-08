@@ -1,3 +1,9 @@
+/**
+ * @file macros.h
+ * @brief This file regroups some macros that are useful all accros the project.
+ * 
+ */
+
 #pragma once
 
 #define ABS(x) ((x) < 0 ? -(x): (x))
