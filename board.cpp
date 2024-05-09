@@ -92,7 +92,15 @@ bool Board::set_piece(uint8_t row, uint8_t col, Piece* piece)
         }
         else
         {
-            _number_of_moves_since_last_take++;
+            // if a pawn is moved it reset the 50 moves
+            if(piece->whoami()[1] == 'P')
+            {
+                _number_of_moves_since_last_take = 0;
+            }
+            else
+            {
+                _number_of_moves_since_last_take++;
+            }
         }
 
         // If we move a king we register his new position to always know where is the king of each color.

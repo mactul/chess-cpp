@@ -5,6 +5,7 @@
 #include "pieces/rook.hpp"
 #include "pieces/bishop.hpp"
 #include "pieces/knight.hpp"
+#include "board_history.hpp"
 #include "macros.h"
 
 Pawn::Pawn(Board* board, uint8_t row, uint8_t col, bool black, bool no_promotion): Piece(board, row, col, black), no_promotion(no_promotion)
@@ -154,6 +155,11 @@ bool Pawn::move(uint8_t row, uint8_t col, bool fake)
     {
         promote(this->board, this->row, this->col, this->black);
     }
+
+    // If a pawn is moved, the board can never came back to his precedent form.
+    // for saving memory, we clear the history.
+    board_history_reset();
+
     return true;
 }
 
