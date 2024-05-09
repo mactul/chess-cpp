@@ -21,6 +21,8 @@ private:
     int8_t white_en_passant_row = -1;
     int8_t white_en_passant_col = -1;
 
+    uint32_t _number_of_moves_since_last_take = 0;
+
 
     bool display_square(uint8_t row, uint8_t col) const;
 
@@ -80,6 +82,13 @@ public:
      */
     bool no_movements_allowed(bool black) const;
 
+
+    /**
+     * @brief This function is here to count whether or not there are 50 moves without any piece taken.
+     * 
+     */
+    uint32_t number_of_moves_since_last_take() const;
+
     /**
      * @brief This method is used by pieces/pawn.cpp to know if a pawn has moved from row-1,col -> row+1,col just before.  
      * @brief In other words, if there is a pawn to eat at position row,col.
@@ -88,7 +97,7 @@ public:
      * @param col 
      * @param black if true, the method looks for a black pawn to eat, if false, it looks for a white pawn to eat.
      */
-    bool is_en_passant(uint8_t row, uint8_t col, bool black);
+    bool is_en_passant(uint8_t row, uint8_t col, bool black) const;
 
     /**
      * @brief This method is called each time a pawn makes a 2 squares travel.  

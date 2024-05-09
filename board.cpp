@@ -1,7 +1,8 @@
+#include <iostream>
+
 #include "board.hpp"
 #include "pieces.hpp"
-
-#include <iostream>
+#include "board_history.hpp"
 
 
 Board::Board()
@@ -78,7 +79,21 @@ bool Board::set_piece(uint8_t row, uint8_t col, Piece* piece)
     }
     if(piece != nullptr)
     {
-        delete _board[row][col];  // We only delete the piece if it was taken by another.
+        if(_board[row][col] != nullptr)
+        {
+            // piece taken !
+
+            _number_of_moves_since_last_take = 0;
+
+            delete _board[row][col];  // We only delete the piece if it was taken by another.
+
+            // if a piece was taken the board can never came back in his precedent form
+            board_history_reset();
+        }
+        else
+        {
+            _number_of_moves_since_last_take++;
+        }
 
         // If we move a king we register his new position to always know where is the king of each color.
         const char* name = piece->whoami();
@@ -256,7 +271,12 @@ bool Board::no_movements_allowed(bool black) const
     return true;
 }
 
-bool Board::is_en_passant(uint8_t row, uint8_t col, bool black)
+uint32_t Board::number_of_moves_since_last_take() const
+{
+    return _number_of_moves_since_last_take;
+}
+
+bool Board::is_en_passant(uint8_t row, uint8_t col, bool black) const
 {
     if(this->black_en_passant_row < 0 || this->black_en_passant_col < 0)
     {
@@ -324,6 +344,9 @@ bool Board::kingside_castling(bool black)
     (void)piece_rook->unrestricted_move(king_row, BOARD_SIZE-3);
 
 
+    // after a castling the board can never came back in his precedent form
+    board_history_reset();
+
     return true;
 }
 
@@ -364,6 +387,9 @@ bool Board::queenside_castling(bool black)
     // the return values are discared because here the move can't fail.
     (void)piece_king->unrestricted_move(king_row, 2);
     (void)piece_rook->unrestricted_move(king_row, 3);
+
+    // after a castling the board can never came back in his precedent form
+    board_history_reset();
 
 
     return true;

@@ -4,6 +4,7 @@
 
 #include "macros.h"
 #include "board.hpp"
+#include "board_history.hpp"
 
 #define MAX_COMMAND_SIZE 32
 
@@ -54,6 +55,8 @@ int main()
     Board board = Board();
 
     board.display();
+
+    board_history_add(board);
 
     while(!player_mate(board, black_turn, &winner))
     {
@@ -142,6 +145,19 @@ int main()
 MOVEMENT_END:
         std::cout << "\n";
         board.display();
+
+        if(!board_history_add(board))
+        {
+            winner = EQUALITY;
+            std::cout << "The board is in the same position for the third time\nStalemate !" << std::endl;
+            break;
+        }
+        if(board.number_of_moves_since_last_take() >= 50)
+        {
+            winner = EQUALITY;
+            std::cout << "50 moves since the last piece taken\nStalemate !" << std::endl;
+            break;
+        }
 
 
         black_turn = !black_turn;

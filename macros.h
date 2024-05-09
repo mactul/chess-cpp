@@ -1,6 +1,6 @@
 /**
  * @file macros.h
- * @brief This file regroups some macros that are useful all accros the project.
+ * @brief This file regroups some macros that are useful all across the project.
  * 
  */
 
