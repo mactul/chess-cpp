@@ -127,7 +127,7 @@ void board_history_reset()
 
 bool board_history_add(const Board& board)
 {
-    CompactBoard compact_board;
+    CompactBoard compact_board = {};
 
     compact_board_create(board, &compact_board);
 

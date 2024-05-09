@@ -30,6 +30,9 @@ void print_in_color(const char* str, enum COLORS color)
 
         if(hConsole == NULL)
         {
+            SetConsoleOutputCP(CP_UTF8);
+            SetConsoleCP(CP_UTF8);
+
             hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
         }
         SetConsoleTextAttribute(hConsole, windows_color_code);

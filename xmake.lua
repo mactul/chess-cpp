@@ -13,7 +13,7 @@ option("static_build")
     set_showmenu(true)
     set_values("autoconfig", "y", "n")
 
-target("test")
+target("chess")
     add_includedirs("./")
     add_files("**.cpp")
 
