@@ -12,6 +12,7 @@ enum PIECES_IDS {
     PIECE_ID_PAWN
 };
 
+// a CompactPiece structure has a size of exactly 1 byte and contain 2 pieces (4 bits for each)
 typedef struct _compact_piece {
     enum PIECES_IDS piece1_id : 3;
     bool piece1_black         : 1;
@@ -54,10 +55,12 @@ enum PIECES_IDS get_piece_id(const Piece* piece)
 
 static bool compact_board_equals(const CompactBoard* cb1, const CompactBoard* cb2)
 {
-    uint64_t* data1 = (uint64_t*) cb1;
-    uint64_t* data2 = (uint64_t*) cb2;
+    // We cast the structure into std::size_t because by definition, sizeof(CompactBoard) is a multiple of sizeof(std::size_t)
+    // and like that the comparison is much quicker.
+    std::size_t* data1 = (std::size_t*) cb1;
+    std::size_t* data2 = (std::size_t*) cb2;
 
-    for(uint8_t i = 0; i < BOARD_SIZE / 2; i++)
+    for(uint8_t i = 0; i < sizeof(CompactBoard) / sizeof(std::size_t); i++)
     {
         if(data1[i] != data2[i])
         {
@@ -103,7 +106,7 @@ static void compact_board_create(const Board& board, CompactBoard* compact_board
     }
 }
 
-uint8_t count_board_occurrences(const CompactBoard& compact_board)
+static uint8_t count_board_occurrences(const CompactBoard& compact_board)
 {
     uint8_t occ = 0;
     for(CompactBoard& compact_board_stored : _previous_boards)
