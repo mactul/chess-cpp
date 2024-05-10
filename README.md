@@ -1,6 +1,6 @@
 # Chess C++
 
-<img src="https://cdn.discordapp.com/attachments/699999438269186058/1237422797916209353/image.png?ex=663b9749&is=663a45c9&hm=b915c236dfec4e2b57a55091700f8e7adb77f223b15149f4cfe501bbc68fc6f6&" height="270">
+<img src="https://i.ibb.co/db8m0Ws/screenshot.png" height="270">
 
 
 ## Compilation
